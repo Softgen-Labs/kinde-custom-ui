@@ -1,5 +1,3 @@
-"use client";
-
 import React from "react";
 
 const styles: {
@@ -10,8 +8,7 @@ const styles: {
   svgPattern: React.CSSProperties;
   logo: React.CSSProperties;
   logoContainer: React.CSSProperties;
-  rotatingText: React.CSSProperties;
-  rotatingTextVisible: React.CSSProperties;
+  staticText: React.CSSProperties;
 } = {
   container: {
     display: "flex",
@@ -20,9 +17,8 @@ const styles: {
   sidePanel: {
     position: "relative",
     borderRadius: "1rem",
-    flex: 1,
+    flex: "0 0 50%",
     margin: "0.5rem",
-    maxWidth: "1024px",
     overflow: "hidden",
     backgroundColor: "#051d22",
     display: "flex",
@@ -42,19 +38,14 @@ const styles: {
     alignItems: "center",
     gap: "1.5rem",
   },
-  rotatingText: {
+  staticText: {
     color: "#ffffff",
     fontSize: "2.25rem",
     fontWeight: 500,
     textAlign: "center",
-    minHeight: "1.75rem",
-    opacity: 0,
-    transition: "opacity 1s ease-in-out",
     fontFamily: 'geist, "geist Fallback", system-ui, -apple-system, sans-serif',
     marginTop: "1.5rem",
-  },
-  rotatingTextVisible: {
-    opacity: 1,
+    whiteSpace: "nowrap",
   },
   gradientDesktop: {
     position: "absolute",
@@ -90,31 +81,55 @@ const styles: {
 };
 
 export const DefaultLayout = (props: { children: React.ReactNode }) => {
-  const texts = [
-    "Your AI App & Website Builder",
-    "Built to stay in flow with you",
-    "Priced to be on your side",
-  ];
-
-  const [currentTextIndex, setCurrentTextIndex] = React.useState(0);
-  const [isVisible, setIsVisible] = React.useState(true);
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setIsVisible(false);
-      setTimeout(() => {
-        setCurrentTextIndex((prev) => (prev + 1) % texts.length);
-        setIsVisible(true);
-      }, 1000);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
-    <div style={styles.container}>
-      {props.children}
-      <div style={styles.sidePanel}>
+    <>
+      <style>{`
+        @media (max-width: 1024px) {
+          .side-panel-responsive {
+            display: none !important;
+          }
+        }
+
+        @keyframes textRotate {
+          0% { opacity: 1; }
+          30% { opacity: 1; }
+          33% { opacity: 0; }
+          100% { opacity: 0; }
+        }
+
+        .rotating-text-container {
+          position: relative;
+          height: 3rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .rotating-text {
+          position: absolute;
+          left: 50%;
+          transform: translateX(-50%);
+          opacity: 0;
+          animation: textRotate 30s infinite;
+          text-align: center;
+        }
+
+        .rotating-text:nth-child(1) {
+          animation-delay: 0s;
+        }
+
+        .rotating-text:nth-child(2) {
+          animation-delay: 10s;
+        }
+
+        .rotating-text:nth-child(3) {
+          animation-delay: 20s;
+        }
+      `}</style>
+      <div style={styles.container}>
+        {props.children}
+        <div style={styles.sidePanel} className="side-panel-responsive">
         {/* Desktop gradient - visible on screens >= 768px */}
         <div style={styles.gradientDesktop}></div>
 
@@ -168,11 +183,20 @@ export const DefaultLayout = (props: { children: React.ReactNode }) => {
               </clipPath>
             </defs>
           </svg>
-          <div style={{ ...styles.rotatingText, ...(isVisible && styles.rotatingTextVisible) }}>
-            {texts[currentTextIndex]}
+          <div className="rotating-text-container" style={{ marginTop: "1.5rem" }}>
+            <div className="rotating-text" style={styles.staticText}>
+              Your AI App & Website Builder
+            </div>
+            <div className="rotating-text" style={styles.staticText}>
+              Built to stay in flow with you
+            </div>
+            <div className="rotating-text" style={styles.staticText}>
+              Priced to be on your side
+            </div>
           </div>
         </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
