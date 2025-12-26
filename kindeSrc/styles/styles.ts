@@ -1,5 +1,5 @@
 // CSS Variables configuration
-const kindeVariables = {
+export const kindeVariables = {
   baseFontFamily:
     "-apple-system, system-ui, BlinkMacSystemFont, Helvetica, Arial, Segoe UI, Roboto, sans-serif",
   controlSelectTextBorderRadius: "8px",

@@ -14,6 +14,7 @@ const DefaultPage: React.FC<KindePageEvent> = ({ context, request }) => {
         <Widget
           heading={context.widget.content.heading}
           description={context.widget.content.description}
+          flow={request.route.flow}
         />
       </DefaultLayout>
     </Root>
