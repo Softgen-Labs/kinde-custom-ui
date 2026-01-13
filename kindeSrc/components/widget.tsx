@@ -63,47 +63,72 @@ export const Widget = (props: { heading: string; description: string; flow?: str
 
         {props.flow === 'login' && <script nonce={nonce} dangerouslySetInnerHTML={{__html: `
           (function() {
-            // Parse cookies
-            const cookies = document.cookie.split(';').reduce((acc, cookie) => {
-              const [key, value] = cookie.trim().split('=');
-              if (key) acc[key] = decodeURIComponent(value);
-              return acc;
-            }, {});
-
-            console.log('Last login method:', cookies['last_login_method'] || 'Not found');
-
-            if (cookies['last_login_method']) {
-              const lastLoginMethod = cookies['last_login_method'].toLowerCase();
-
-              const addLabelToButton = (button) => {
-                if (!button.querySelector('.last-used-label')) {
-                  button.classList.add('last-login-method');
-                  button.style.position = 'relative';
-
-                  const label = document.createElement('div');
-                  label.className = 'last-used-label';
-                  label.textContent = 'Last used';
-                  label.style.cssText = 'position: absolute; top: -16px; right: 0; font-size: 10px; font-weight: 600; color: ${kindeVariables.buttonPrimaryBackgroundColor};';
-                  // label.style.cssText = 'position: absolute; top: -8px; right: -8px; font-size: 11px; font-weight: 500; color: ${kindeVariables.buttonPrimaryBackgroundColor}; background: white; padding: 2px 5px; border-radius: ${kindeVariables.buttonSecondaryBorderRadius}; border: 1px solid ${kindeVariables.buttonPrimaryBackgroundColor};';
-
-                  button.appendChild(label);
-                }
-              };
-
-              const updateButtons = () => {
-                if (lastLoginMethod !== 'email') {
-                  const buttons = document.querySelectorAll('button');
-                  buttons.forEach(button => {
-                    const buttonText = button.textContent?.toLowerCase() || '';
-                    if (buttonText.includes(lastLoginMethod)) {
-                      addLabelToButton(button);
-                    }
-                  });
-                }
-              };
-
-              setTimeout(updateButtons, 500);
+            // Check localStorage availability
+            if (typeof localStorage === 'undefined') {
+              console.warn('localStorage is not available');
+              return;
             }
+
+            const STORAGE_KEY = 'kinde_last_connection_id';
+
+            // Add label to button function
+            const addLabelToButton = (button) => {
+              if (!button.querySelector('.last-used-label')) {
+                button.classList.add('last-login-method');
+                button.style.position = 'relative';
+
+                const label = document.createElement('div');
+                label.className = 'last-used-label';
+                label.textContent = 'Last used';
+                label.style.cssText = 'position: absolute; top: -16px; right: 0; font-size: 10px; font-weight: 600; color: ${kindeVariables.buttonPrimaryBackgroundColor};';
+
+                button.appendChild(label);
+              }
+            };
+
+            // Show badge on last used button
+            const showLastUsedBadge = () => {
+              const lastConnectionId = localStorage.getItem(STORAGE_KEY);
+              console.log('Last connection ID:', lastConnectionId || 'Not found');
+
+              if (lastConnectionId) {
+                const buttons = document.querySelectorAll('button[name="p_connection_id"]');
+                buttons.forEach(button => {
+                  if (button.value === lastConnectionId) {
+                    addLabelToButton(button);
+                  }
+                });
+              }
+            };
+
+            // Track clicks on connection buttons
+            const trackConnectionClicks = () => {
+              document.addEventListener('click', (e) => {
+                const target = e.target.closest('button[name="p_connection_id"]');
+                if (target && target.value) {
+                  console.log('Storing connection ID:', target.value);
+                  localStorage.setItem(STORAGE_KEY, target.value);
+                }
+              }, true); // Use capture phase to catch click before navigation
+            };
+
+            // Clear saved value on Continue button click
+            const clearOnContinue = () => {
+              document.addEventListener('click', (e) => {
+                const target = e.target.closest('button.kinde-button-variant-primary[type="submit"]');
+                if (target) {
+                  console.log('Clearing saved connection ID');
+                  localStorage.removeItem(STORAGE_KEY);
+                }
+              }, true);
+            };
+
+            // Initialize
+            setTimeout(() => {
+              showLastUsedBadge();
+              trackConnectionClicks();
+              clearOnContinue();
+            }, 500);
           })();
         `}} />}
       <main style={styles.loginForm} className="login-form">
