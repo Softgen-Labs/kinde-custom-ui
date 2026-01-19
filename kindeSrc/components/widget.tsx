@@ -13,11 +13,11 @@ const styles: {
   logo: React.CSSProperties;
 } = {
   loginForm: {
-    minWidth: "400px",
-    margin: "0 auto",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
+    // minWidth: "400px",
+    // margin: "0 auto",
+    // display: "flex",
+    // flexDirection: "column",
+    // justifyContent: "center",
     backgroundColor: "#ffffff",
     borderRadius: kindeVariables.buttonSecondaryBorderRadius,
     border: "1px solid rgba(0, 0, 0, 0.08)",
@@ -52,6 +52,13 @@ export const Widget = (props: { heading: string; description: string; flow?: str
             .login-form {
               border: none !important;
               box-shadow: none !important;
+
+              .widget-container {
+                padding-top: 3rem !important;
+                padding-bottom: 3rem !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+              }
             }
           }
           .last-login-method {
@@ -135,7 +142,7 @@ export const Widget = (props: { heading: string; description: string; flow?: str
         <div style={styles.logoWrapper}>
           <img style={styles.logo} src={getLogoUrl()} />
         </div>
-        <div style={{ padding: "3rem" }}>
+        <div style={{ padding: "3rem" }} className="widget-container">
           <h2 style={styles.heading}>{props.heading}</h2>
           <p style={styles.description}>{props.description}</p>
           {getKindeWidget()}
