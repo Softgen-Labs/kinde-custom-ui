@@ -11,6 +11,7 @@ export const kindeVariables = {
   buttonSecondaryBorderColor: "#e9edec",
   buttonSecondaryBorderStyle: "solid",
   buttonSecondaryBorderRadius: "8px",
+  textLinkColor: "#000000",
 } as const;
 
 export const getStyles = (): string => `
@@ -25,6 +26,8 @@ export const getStyles = (): string => `
     --kinde-button-secondary-border-color: ${kindeVariables.buttonSecondaryBorderColor};
     --kinde-button-secondary-border-style: ${kindeVariables.buttonSecondaryBorderStyle};
     --kinde-button-secondary-border-radius: ${kindeVariables.buttonSecondaryBorderRadius};
+    --kinde-text-link-color: ${kindeVariables.textLinkColor};
+    --kinde-text-link-color-dark: ${kindeVariables.textLinkColor};
     --kinde-heading-font-weight;
   }
 
