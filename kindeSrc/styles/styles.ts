@@ -40,4 +40,10 @@ export const getStyles = (): string => `
     width: 5rem;
     height: 3rem;
   }
+
+  @media (max-width: 767px) {
+    :root {
+      --kinde-layout-button-group-gap: 0.5rem;
+    }
+  }
 `;
