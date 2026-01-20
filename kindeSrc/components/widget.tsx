@@ -56,8 +56,8 @@ export const Widget = (props: { heading: string; description: string; flow?: str
               .widget-container {
                 padding-top: 3rem !important;
                 padding-bottom: 3rem !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
               }
             }
           }
